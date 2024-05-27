@@ -1,10 +1,21 @@
 import { NativeRouter } from "react-router-native";
-import Content from "./Content";
+import { AuthContext } from "./contexts/AuthContext";
+import { useAuth } from "./hooks/useAuth";
+import Content from "./pages/Content";
+import { LoadProvider } from "./contexts/LoadContext";
 
-export default function App() {
+const App = () => {
+  const { authContext } = useAuth();
+
   return (
-    <NativeRouter>
-      <Content />
-    </NativeRouter>
+    <LoadProvider>
+      <AuthContext.Provider value={authContext}>
+        <NativeRouter>
+          <Content />
+        </NativeRouter>
+      </AuthContext.Provider>
+    </LoadProvider>
   );
-}
+};
+
+export default App;

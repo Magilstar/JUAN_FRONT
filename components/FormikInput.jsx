@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   Animated,
+  View,
 } from "react-native";
 import { useField } from "formik";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -34,26 +35,42 @@ const FormikInput = ({
 
   return (
     <Animated.View style={containerStyle}>
-      <TextInput
-        placeholderTextColor="#ccc"
-        placeholder={placeholder}
-        onBlur={() => helpers.setTouched(true)}
-        value={field.value}
-        onChange={(value) => helpers.setValue(value)}
-        secureTextEntry={secureTextEntry}
-        style={inputStyle}
-        {...props}
-      />
-      {type === "password" && (
-        <TouchableOpacity onPress={handleEyePress}>
-          <Icon
-            name={secureTextEntry ? "eye-off-outline" : "eye-outline"}
-            size={20}
-          />
-        </TouchableOpacity>
-      )}
+      <View
+        style={{ flexDirection: "row", width: "100%", position: "relative" }}
+      >
+        <TextInput
+          placeholderTextColor="#ccc"
+          placeholder={placeholder}
+          onBlur={() => helpers.setTouched(true)}
+          value={field.value}
+          onChangeText={(value) => helpers.setValue(value)}
+          secureTextEntry={secureTextEntry}
+          style={inputStyle}
+          {...props}
+        />
+        {type === "password" && (
+          <TouchableOpacity
+            onPress={handleEyePress}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "50%",
+              transform: [{ translateY: -10 }], // Adjust this value as needed
+            }}
+          >
+            <Icon
+              color="white"
+              name={secureTextEntry ? "eye-off-outline" : "eye-outline"}
+              size={20}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+
       {meta.touched && meta.error && (
-        <Text style={styles.errorText}>{meta.error}</Text>
+        <View style={{ alignItems: "center" }}>
+          <Text style={styles.errorText}>{meta.error}</Text>
+        </View>
       )}
     </Animated.View>
   );
@@ -61,12 +78,12 @@ const FormikInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: "column",
     borderRadius: 25,
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginBottom: 20,
-    alignItems: "center",
+    alignItems: "start",
   },
   errorContainer: {
     borderColor: "red",
@@ -77,7 +94,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 12,
     padding: 12,
-    color: "white", 
+    color: "white",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -86,11 +103,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,
+    flexDirection: "row",
   },
   errorText: {
     color: "red",
-    marginTop: -15,
-    marginLeft: 10,
+    marginTop: 5,
   },
 });
 
