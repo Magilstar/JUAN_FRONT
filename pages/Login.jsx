@@ -33,7 +33,7 @@ const Login = () => {
         authContext.signIn(response.token);
         navigate("contacts");
       } else {
-        Alert.alert("Login Failed");
+        Alert.alert(`Login Failed. ${response.message}`);
       }
     } catch (error) {
       Alert.alert(JSON.stringify(error));
