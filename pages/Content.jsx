@@ -11,6 +11,12 @@ import { useAuth } from "../hooks/useAuth";
 import { useContext } from "react";
 import Loader from "../components/Loader";
 import { LoadContext } from "../contexts/LoadContext";
+import { MENU_OPTIONS } from "../constans";
+
+// Importa los componentes de las páginas aquí
+// import Profile from "./Profile";
+// import Groups from "./Groups";
+// import Register from "./Register";
 
 const Content = () => {
   useBackHandler();
@@ -18,18 +24,10 @@ const Content = () => {
   const { state, authContext } = useAuth();
   const { isLoading } = useContext(LoadContext);
 
-  const menuOptions = [
-    {
-      label: "Contacts",
-      path: "/contacts",
-      action: () => navigate("/contacts"),
-    },
-    {
-      label: "Logout",
-      path: "/logout",
-      action: () => authContext.signOut(),
-    },
-  ];
+  const menuOptions = MENU_OPTIONS({
+    navigateFunct: navigate,
+    context: authContext,
+  });
 
   return (
     <View style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
@@ -40,6 +38,8 @@ const Content = () => {
         <NavigationBar menuOptions={menuOptions}>
           <Routes>
             <Route path="contacts" element={<Contacts />} />
+            {/* <Route path="profile" element={<Profile />} /> */}
+            {/* <Route path="groups" element={<Groups />} /> */}
             <Route path="*" element={<Navigate to="/contacts" />} />
           </Routes>
         </NavigationBar>
@@ -47,6 +47,7 @@ const Content = () => {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="login" element={<Login />} />
+          {/* <Route path="register" element={<Register />} /> */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       )}
