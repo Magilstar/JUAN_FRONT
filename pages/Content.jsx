@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Routes, Route, useNavigate, Navigate } from "react-router-native";
+import { Routes, Route, Navigate, useNavigate } from "react-router-native";
 import Main from "./Main";
 import Login from "./Login";
 import useBackHandler from "../hooks/useBackHook";
@@ -7,10 +7,10 @@ import Contacts from "./Contacts";
 import Constants from "expo-constants";
 import NavigationBar from "../components/NavigationBar";
 import { StatusBar } from "expo-status-bar";
-import { useAuth } from "../hooks/useAuth";
 import { useContext } from "react";
 import Loader from "../components/Loader";
 import { LoadContext } from "../contexts/LoadContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { MENU_OPTIONS } from "../constans";
 
 // Importa los componentes de las páginas aquí
@@ -20,21 +20,18 @@ import { MENU_OPTIONS } from "../constans";
 
 const Content = () => {
   useBackHandler();
-  const navigate = useNavigate();
-  const { state, authContext } = useAuth();
   const { isLoading } = useContext(LoadContext);
+  const { session, signOut } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const menuOptions = MENU_OPTIONS({
-    navigateFunct: navigate,
-    context: authContext,
-  });
+  const menuOptions = MENU_OPTIONS({ navigateFunct: navigate, signOut });
 
   return (
     <View style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
       <StatusBar style="dark" backgroundColor="#000" />
       {isLoading ? (
         <Loader />
-      ) : state.userToken ? (
+      ) : session.isSession && session.token !== null ? (
         <NavigationBar menuOptions={menuOptions}>
           <Routes>
             <Route path="contacts" element={<Contacts />} />

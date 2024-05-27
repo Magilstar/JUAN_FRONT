@@ -6,16 +6,17 @@ import StyleButton from "../components/StyleButton";
 import { loginValidation } from "../validations/login";
 import FetchManager from "../FetchManager";
 import { useNavigate } from "react-router-native";
-import { useAuth } from "../hooks/useAuth";
 import { useContext } from "react";
 import { LoadContext } from "../contexts/LoadContext";
 import { CONSTANTS } from "../constans";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Login = () => {
   const initial = { email: "", password: "" };
   const navigate = useNavigate();
-  const { authContext } = useAuth();
   const { isLoading, setIsLoading } = useContext(LoadContext);
+  const { setSession } = useContext(AuthContext);
 
   const onSubmitLogin = async (values) => {
     try {
@@ -26,16 +27,16 @@ const Login = () => {
         body: values,
       });
 
-      console.log(response);
-
       if (response.token) {
         Alert.alert("Login Successful");
-        authContext.signIn(response.token);
-        navigate("contacts");
+        await AsyncStorage.setItem("token", response.token);
+        setSession({ isSession: true, token: response.token });
+        navigate("/contacts");
       } else {
         Alert.alert(`Login Failed. ${response.message}`);
       }
     } catch (error) {
+      setSession({ isSession: false, token: null });
       Alert.alert(JSON.stringify(error));
     } finally {
       setIsLoading(false);

@@ -7,7 +7,7 @@ export const CONSTANTS = {
   API_URL_CONTACTS: `${API_URL_BASE}/contacts`,
 };
 
-export const MENU_OPTIONS = ({navigateFunct, context}) => [
+export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
   {
     label: "Contacts",
     path: "/contacts",
@@ -16,6 +16,6 @@ export const MENU_OPTIONS = ({navigateFunct, context}) => [
   {
     label: "Logout",
     path: "/logout",
-    action: () => context.signOut(),
+    action: () => signOut(),
   },
 ];

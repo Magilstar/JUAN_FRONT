@@ -1,32 +1,22 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-export const initialState = {
-    isLoading : true,
-    isSignout : false,
-    userToken : null,
-}
+const initialState = {
+  isSession: false,
+  token: null,
+};
 
-export const reducerAuth = (prevState, action) => {
-    switch (action.type) {
-      case 'RESTORE_TOKEN':
-        return {
-          ...prevState,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case 'SIGN_IN':
-        return {
-          ...prevState,
-          isSignout: false,
-          userToken: action.token,
-        };
-      case 'SIGN_OUT':
-        return {
-          ...prevState,
-          isSignout: true,
-          userToken: null,
-        };
-    }
+export const AuthProvider = ({ children }) => {
+  const [session, setSession] = useState(initialState);
+
+  const signOut = () => {
+    setSession(initialState);
   };
+
+  return (
+    <AuthContext.Provider value={{ session, setSession, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
