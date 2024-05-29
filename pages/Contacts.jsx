@@ -35,7 +35,7 @@ const Contacts = () => {
         const { token } = session;
         const URL = `${CONSTANTS.API_URL_CONTACTS}/get/allUser`;
         const data = await FetchManager({ url: URL, token });
-        console.log(data)
+        // console.log(data)
         //Aqui
         setContacts(data);
       } catch (error) {

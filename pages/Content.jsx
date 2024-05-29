@@ -40,9 +40,7 @@ const Content = () => {
             <Route path="addContact" element={<AddContact />} />
             {/* <Route path="profile" element={<Profile />} /> */}
             {/* <Route path="groups" element={<Groups />} /> */}
-            <Route path="contactOne">
-              <Route path=":id" element={<ContactOne />} />
-            </Route>
+            <Route path="contactOne/:id" element={<ContactOne/>}/>
             <Route path="*" element={<Navigate to="/contacts" />} />
           </Routes>
         </NavigationBar>

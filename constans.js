@@ -25,8 +25,8 @@ export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
     action: () => navigateFunct("/addContact"),
   },
   {
-    label: "Contact",
-    path: "/contactOne",
-    action: () => navigateFunct("/contacts"),
+    label: "Edit Contact",
+    path: "/contactOne/:id",
+    action: () => {}
   }
 ];

@@ -8,6 +8,7 @@ import { CONSTANTS } from "../constans";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-native";
 import addContactSchema from "../validations/addContact";
+import StyleButton from "../components/StyleButton";
 
 const AddContact = () => {
   const { session } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const AddContact = () => {
 
   const onSubmit = async (values) => {
     try {
-        console.log(values)
+      console.log(values);
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_CONTACTS}/create`,
         method: "POST",
@@ -91,12 +92,7 @@ const AddContact = () => {
               </View>
             ))}
             <View style={styles.buttonContainer}>
-              <Button
-                title="Create"
-                onPress={handleSubmit}
-                color="#007BFF"
-                style={{ borderRadius: 50 }}
-              />
+              <StyleButton onPress={handleSubmit}>Create</StyleButton>
             </View>
           </View>
         )}

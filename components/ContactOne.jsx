@@ -8,6 +8,7 @@ import { CONSTANTS } from "../constans";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-native";
 import addContactSchema from "../validations/addContact";
+import StyleButton from "./StyleButton";
 
 function ContactOne() {
   const { id } = useParams();
@@ -20,7 +21,6 @@ function ContactOne() {
     const fetchContactData = async () => {
       try {
         const URL = `${CONSTANTS.API_URL_CONTACTS}/getContact/${id}`;
-        console.log(URL);
         const response = await FetchManager({
           url: URL,
           method: "GET",
@@ -48,6 +48,7 @@ function ContactOne() {
 
   const onSubmit = async (values) => {
     try {
+      console.log(values)
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_CONTACTS}/update`,
         method: "PUT",
@@ -108,6 +109,12 @@ function ContactOne() {
       phone: contact.phone.filter((_, i) => i !== index),
     });
   };
+  emoveNumberField = (index) => {
+    setContact({
+      ...contact,
+      phone: contact.phone.filter((_, i) => i !== index),
+    });
+  };
 
   if (!contact || !groups) {
     return null; // O puedes mostrar un componente de carga aquí
@@ -124,37 +131,45 @@ function ContactOne() {
           <View>
             <View style={styles.row}>
               <FormikInput name="name" style={styles.input} />
-              <Icon name="create-outline" size={24} style={styles.icon} />
             </View>
-            {contact.phone &&
-              contact.phone.map((number, index) => (
-                <View key={index}>
-                  <View style={styles.row}>
-                    <FormikInput
-                      name={`phone[${index}]`}
-                      style={styles.input}
-                    />
+
+            <View style={{ flexDirection: "row", flex: 1 }}>
+              <View style={{ flex: 1 }}>
+                {contact.phone &&
+                  contact.phone.map((number, index) => (
                     <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
+                      key={index}
+                      style={{ flexDirection: "row", width: "100%" }}
                     >
-                      <Icon
-                        name="remove-circle-outline"
-                        size={24}
-                        style={styles.icon}
-                        onPress={() => removeNumberField(index)}
-                      />
-                      {index === contact.phone.length - 1 && (
-                        <Icon
-                          name="add-circle-outline"
-                          size={24}
-                          style={styles.icon}
-                          onPress={addNumberField}
+                      <View style={{}}>
+                        <FormikInput
+                          name={`phone[${index}]`}
+                          style={styles.input}
                         />
-                      )}
+                      </View>
+                      <View style={{}}>
+                        {index !== 0 && (
+                          <Icon
+                            name="remove-circle-outline"
+                            size={30}
+                            style={styles.icon}
+                            onPress={() => removeNumberField(index)}
+                          />
+                        )}
+                      </View>
                     </View>
-                  </View>
-                </View>
-              ))}
+                  ))}
+              </View>
+              <View style={{}}>
+                <Icon
+                  name="add-circle-outline"
+                  size={30}
+                  style={styles.icon}
+                  onPress={addNumberField}
+                />
+              </View>
+            </View>
+
             {groups &&
               groups.map((group) => (
                 <View style={styles.row} key={group.id}>
@@ -165,23 +180,18 @@ function ContactOne() {
                   />
                   <Icon
                     name="trash-outline"
-                    size={24}
+                    size={30}
                     style={styles.icon}
                     onPress={() => removeGroup(group.id)}
                   />
                 </View>
               ))}
-            <Button
-              title="Update"
-              onPress={handleSubmit}
-              style={styles.button}
-            />
-            <Button
-              title="Delete"
-              onPress={deleteContact}
-              color="red"
-              style={styles.button}
-            />
+            <View style={styles.buttonContainer}>
+
+              <StyleButton onPress={handleSubmit}>Update</StyleButton>
+              <StyleButton onPress={deleteContact} color="red">Delete</StyleButton>
+
+            </View>
           </View>
         )}
       </Formik>
@@ -197,14 +207,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
   },
   row: {
+    flex: 1,
     flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 10,
   },
   input: {
-    height: 40,
+    height: 50,
     backgroundColor: "#171718",
-    borderColor: "gray",
+    borderColor: "white",
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -212,14 +223,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   icon: {
+    marginTop: 15,
+    marginBottom: 10,
+    marginRight: 20,
     marginLeft: 10,
-  },
-  button: {
-    backgroundColor: "#007BFF",
+    paddingRight: 15,
     color: "#fff",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
+  },
+  buttonContainer: {
+    gap: 10,
+    marginTop: 20,
+    borderRadius: 45,
   },
 });
 
