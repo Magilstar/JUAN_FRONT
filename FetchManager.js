@@ -1,4 +1,10 @@
-const FetchManager = async ({ url, method = "GET", body, isCors = false }) => {
+const FetchManager = async ({
+  url,
+  method = "GET",
+  body,
+  isCors = false,
+  token,
+}) => {
   try {
     const config = {
       method,
@@ -6,19 +12,15 @@ const FetchManager = async ({ url, method = "GET", body, isCors = false }) => {
       mode: isCors ? "cors" : "no-cors",
       headers: {
         "Content-Type": "application/json",
+        ...(token && { Authorization: token }),
       },
     };
 
-    if (body && (method === "POST" || method === "PUT" || method === "PATCH")) {
+    if (body && (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE")) {
       config.body = JSON.stringify(body);
     }
 
     const response = await fetch(url, config);
-
-    if (response.status === 500 || response.status === 404 || response.status === 400)
-      throw new Error(
-        `La respuesta no es correcta, el status es ${response.status}`
-      );
 
     const data = await response.json();
 
@@ -27,6 +29,8 @@ const FetchManager = async ({ url, method = "GET", body, isCors = false }) => {
     console.error(
       `Ocurrió un error realizando un fetch, donde la url era ${url} y el error fue ${error.message}`
     );
+
+    console.error(error)
     return false;
   }
 };

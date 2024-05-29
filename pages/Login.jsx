@@ -28,7 +28,6 @@ const Login = () => {
       });
 
       if (response.token) {
-        Alert.alert("Login Successful");
         await AsyncStorage.setItem("token", response.token);
         setSession({ isSession: true, token: response.token });
         navigate("/contacts");

@@ -12,6 +12,8 @@ import Loader from "../components/Loader";
 import { LoadContext } from "../contexts/LoadContext";
 import { AuthContext } from "../contexts/AuthContext";
 import { MENU_OPTIONS } from "../constans";
+import AddContact from "./AddContact";
+import ContactOne from "../components/ContactOne";
 
 // Importa los componentes de las páginas aquí
 // import Profile from "./Profile";
@@ -35,8 +37,12 @@ const Content = () => {
         <NavigationBar menuOptions={menuOptions}>
           <Routes>
             <Route path="contacts" element={<Contacts />} />
+            <Route path="addContact" element={<AddContact />} />
             {/* <Route path="profile" element={<Profile />} /> */}
             {/* <Route path="groups" element={<Groups />} /> */}
+            <Route path="contactOne">
+              <Route path=":id" element={<ContactOne />} />
+            </Route>
             <Route path="*" element={<Navigate to="/contacts" />} />
           </Routes>
         </NavigationBar>

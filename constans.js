@@ -5,6 +5,7 @@ export const CONSTANTS = {
   API_URL_LOGIN: `${API_URL_BASE}/auth/login`,
   API_URL_REGISTER: `${API_URL_BASE}/auth/register`,
   API_URL_CONTACTS: `${API_URL_BASE}/contacts`,
+  API_URL_GROUPS: `${API_URL_BASE}/groups`,
 };
 
 export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
@@ -18,4 +19,14 @@ export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
     path: "/logout",
     action: () => signOut(),
   },
+  {
+    label: "Add Contact",
+    path: "/addContact",
+    action: () => navigateFunct("/addContact"),
+  },
+  {
+    label: "Contact",
+    path: "/contactOne",
+    action: () => navigateFunct("/contacts"),
+  }
 ];
