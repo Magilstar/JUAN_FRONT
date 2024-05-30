@@ -61,7 +61,7 @@ const Groups = () => {
             <Text style={styles.letter}>{letter}</Text>
             <View style={styles.group}>
               {groups.map((group) => (
-                <View key={group._id}>
+                <View key={group.id}>
                   <GroupComponent group={group} />
                   {group !== groups[groups.length - 1] && (
                     <View style={styles.separator} />

@@ -15,6 +15,7 @@ import useBackHandler from "../hooks/useBackHook";
 import { MENU_OPTIONS } from "../constans";
 import { LoadContext } from "../contexts/LoadContext";
 import { AuthContext } from "../contexts/AuthContext";
+import AddGroup from "./AddGroup";
 
 const Content = () => {
   useBackHandler();
@@ -35,6 +36,7 @@ const Content = () => {
             <Route path="addContact" element={<AddContact />} />
             <Route path="groups" element={<Groups />} />
             <Route path="contactOne/:id" element={<ContactOne />} />
+            <Route path="addGroup" element={<AddGroup />} />
             <Route path="*" element={<Navigate to="/contacts" />} />
           </Routes>
         </NavigationBar>
