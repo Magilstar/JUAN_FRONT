@@ -19,27 +19,35 @@ const NavigationBar = ({ menuOptions, children }) => {
     if (!containsParam) {
       return option.path === location.pathname;
     } else {
-      const [baseOptionPath] = option.path.split("/:"); 
-      const baseLocationPath = location.pathname.split("/"); 
+      const [baseOptionPath] = option.path.split("/:");
+      const baseLocationPath = location.pathname.split("/");
 
-      const parsedLocationPath = `/${baseLocationPath[1]}`
+      const parsedLocationPath = `/${baseLocationPath[1]}`;
 
-      return baseOptionPath === parsedLocationPath
+      return baseOptionPath === parsedLocationPath;
     }
   });
 
   const sidebarWidth = new Animated.Value(0);
+  const sidebarPosition = new Animated.Value(-200);
 
   useEffect(() => {
-    Animated.timing(sidebarWidth, {
-      toValue: isSidebarVisible ? 200 : 0,
-      duration: 100,
-      useNativeDriver: false,
-    }).start();
+    Animated.parallel([
+      Animated.timing(sidebarWidth, {
+        toValue: isSidebarVisible ? 200 : 0,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+      Animated.timing(sidebarPosition, {
+        toValue: isSidebarVisible ? 0 : -200,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+    ]).start();
   }, [isSidebarVisible]);
 
   const toggleSidebar = () => {
-    setSidebarVisible(!isSidebarVisible);
+    setSidebarVisible((prevState) => !prevState);
   };
 
   return (
@@ -56,28 +64,14 @@ const NavigationBar = ({ menuOptions, children }) => {
           {currentOption ? currentOption.label : "No page selected"}
         </Text>
       </View>
-      <TouchableOpacity style={styles.content} activeOpacity={1} onPress={isSidebarVisible ? toggleSidebar : null}>
+      <TouchableOpacity
+        style={styles.content}
+        activeOpacity={1}
+        onPress={isSidebarVisible ? toggleSidebar : null}
+      >
         {children}
       </TouchableOpacity>
-      <Animated.View
-        style={[
-          styles.sidebar,
-          { width: sidebarWidth, left: isSidebarVisible ? 0 : -200 },
-        ]}
-      >
-        {menuOptions.map((option, index) => (
-          <Link
-            key={index}
-            to={option.path}
-            underlayColor="#f0f4f7"
-            style={styles.link}
-          >
-            <TouchableOpacity onPress={option.action}>
-              <Text style={{ color: "#fff" }}>{option.label}</Text>
-            </TouchableOpacity>
-          </Link>
-        ))}
-      </Animated.View>
+
       {isSidebarVisible && (
         <TouchableOpacity
           style={styles.overlay}
@@ -85,11 +79,32 @@ const NavigationBar = ({ menuOptions, children }) => {
           onPress={toggleSidebar}
         />
       )}
+
+      <Animated.View
+        style={[styles.sidebar, { width: sidebarWidth, left: sidebarPosition }]}
+      >
+        {menuOptions
+          .filter((option) => option.action)
+          .map((option, index) => (
+            <Link
+              key={index}
+              to={option.path}
+              underlayColor="#f0f4f7"
+              style={styles.link}
+            >
+              <TouchableOpacity onPress={option.action}>
+                <Text
+                  style={{ color: "#fff", fontWeight: "500", fontSize: 18 }}
+                >
+                  {option.label}
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          ))}
+      </Animated.View>
     </View>
   );
 };
-
-// ... Resto del código
 
 const styles = StyleSheet.create({
   container: {
@@ -101,16 +116,16 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 15,
     backgroundColor: "#000",
-    alignItems: "center", // This will center the text vertically
+    alignItems: "center",
   },
   pageTitle: {
-    fontWeight: "bold", // This will make the text bold
-    fontSize: 20, // This will increase the text size
-    color: "#fff", // This will set the text color to white
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "#fff",
   },
   sidebar: {
     position: "absolute",
-    top: 50, // Adjust this value as needed
+    top: 50,
     height: Dimensions.get("window").height,
     backgroundColor: "#000",
     padding: 10,
@@ -118,7 +133,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    zIndex: 1,
   },
   link: {
     margin: 10,
@@ -130,6 +144,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex: 1,
   },
 });
 

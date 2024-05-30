@@ -9,12 +9,14 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate, useParams } from "react-router-native";
 import addContactSchema from "../validations/addContact";
 import StyleButton from "./StyleButton";
+import { LoadContext } from "../contexts/LoadContext";
 
 function ContactOne() {
   const { id } = useParams();
   const [contact, setContact] = useState(null);
   const [groups, setGroups] = useState(null);
   const { session } = useContext(AuthContext);
+  const {setIsLoading} = useContext(LoadContext)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +51,7 @@ function ContactOne() {
   const onSubmit = async (values) => {
     try {
       console.log(values)
+      setIsLoading(true)
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_CONTACTS}/update`,
         method: "PUT",
@@ -62,6 +65,8 @@ function ContactOne() {
     } catch (error) {
       Alert.alert(JSON.stringify(error));
       console.log(error);
+    }finally{
+      setIsLoading(false)
     }
   };
 

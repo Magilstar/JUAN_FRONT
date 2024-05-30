@@ -9,7 +9,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigate } from "react-router-native";
 
-const ContactComponent = ({ contact}) => {
+const ContactComponent = ({ contact }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
@@ -25,11 +25,11 @@ const ContactComponent = ({ contact}) => {
     Linking.openURL(`sms:${contact.number}`);
   };
 
-  const navegar = () =>{
-    const URL_TO_NAVIGATE = `/contactOne/${contact.id}`
-    console.log(URL_TO_NAVIGATE)
-    navigate(URL_TO_NAVIGATE)
-  }
+  const navegar = () => {
+    const URL_TO_NAVIGATE = `/contactOne/${contact.id}`;
+    console.log(URL_TO_NAVIGATE);
+    navigate(URL_TO_NAVIGATE);
+  };
 
   return (
     <View>
@@ -39,10 +39,7 @@ const ContactComponent = ({ contact}) => {
       </TouchableOpacity>
       {isExpanded && (
         <View style={styles.menu}>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={navegar}
-          >
+          <TouchableOpacity style={styles.menuItem} onPress={navegar}>
             <Icon name="information-circle-outline" size={30} color="#fff" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem} onPress={handleText}>

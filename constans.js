@@ -15,6 +15,11 @@ export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
     action: () => navigateFunct("/contacts"),
   },
   {
+    label: "Groups",
+    path: "/groups",
+    action: () => navigateFunct("/groups"),
+  },
+  {
     label: "Logout",
     path: "/logout",
     action: () => signOut(),
@@ -22,11 +27,13 @@ export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
   {
     label: "Add Contact",
     path: "/addContact",
-    action: () => navigateFunct("/addContact"),
   },
   {
     label: "Edit Contact",
     path: "/contactOne/:id",
-    action: () => {}
-  }
+  },
+  {
+    label: "Add Group",
+    path: "/addGroup",
+  },
 ];

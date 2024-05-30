@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
-import ContactComponent from "../components/ContactComponent";
+import GroupComponent from "../components/GroupComponent";
 import FetchManager from "../FetchManager";
 import { CONSTANTS } from "../constans";
 import { AuthContext } from "../contexts/AuthContext";
@@ -8,25 +8,25 @@ import { FAB } from "react-native-paper";
 import { useNavigate } from "react-router-native";
 import { LoadContext } from "../contexts/LoadContext";
 
-const Contacts = () => {
-  const [contacts, setContacts] = useState([]);
+const Groups = () => {
+  const [groups, setGroups] = useState([]);
   const { session } = useContext(AuthContext);
   const { setIsLoading } = useContext(LoadContext);
   const navigate = useNavigate();
 
-  let sortedContacts = [];
-  let groupedContacts = {};
+  let sortedGroups = [];
+  let groupedGroups = {};
 
-  if (contacts && contacts.length > 0) {
-    sortedContacts = contacts.sort((a, b) => a.name.localeCompare(b.name));
+  if (groups && groups.length > 0) {
+    sortedGroups = groups.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Agrupar los contactos por la primera letra del nombre
-    groupedContacts = sortedContacts.reduce((groups, contact) => {
-      const firstLetter = contact.name[0].toUpperCase();
+    // Group the groups by the first letter of the name
+    groupedGroups = sortedGroups.reduce((groups, group) => {
+      const firstLetter = group.name[0].toUpperCase();
       if (!groups[firstLetter]) {
         groups[firstLetter] = [];
       }
-      groups[firstLetter].push(contact);
+      groups[firstLetter].push(group);
       return groups;
     }, {});
   }
@@ -35,12 +35,11 @@ const Contacts = () => {
     const handleFetchInit = async () => {
       try {
         const { token } = session;
-        const URL = `${CONSTANTS.API_URL_CONTACTS}/get/allUser`;
+        const URL = `${CONSTANTS.API_URL_GROUPS}/get/user`;
         setIsLoading(true);
         const data = await FetchManager({ url: URL, token });
-        // console.log(data)
-        //Aqui
-        setContacts(data);
+        console.log(data);
+        setGroups(data);
       } catch (error) {
         Alert.alert(JSON.stringify(error));
         console.log(error);
@@ -52,19 +51,19 @@ const Contacts = () => {
     handleFetchInit();
   }, []);
 
-  const handleAddContact = () => navigate("/addContact");
+  const handleAddGroup = () => navigate("/addGroup");
 
   return (
     <View style={styles.container}>
       <ScrollView>
-        {Object.entries(groupedContacts).map(([letter, contacts], index) => (
-          <View key={index}>
+        {Object.entries(groupedGroups).map(([letter, groups]) => (
+          <View key={letter}>
             <Text style={styles.letter}>{letter}</Text>
             <View style={styles.group}>
-              {contacts.map((contact, index) => (
-                <View key={contact.id}>
-                  <ContactComponent contact={contact} />
-                  {index < contacts.length - 1 && (
+              {groups.map((group) => (
+                <View key={group._id}>
+                  <GroupComponent group={group} />
+                  {group !== groups[groups.length - 1] && (
                     <View style={styles.separator} />
                   )}
                 </View>
@@ -73,12 +72,12 @@ const Contacts = () => {
           </View>
         ))}
       </ScrollView>
-      <FAB style={styles.fab} small icon="plus" onPress={handleAddContact} />
+      <FAB style={styles.fab} small icon="plus" onPress={handleAddGroup} />
     </View>
   );
 };
 
-export default Contacts;
+export default Groups;
 
 const styles = StyleSheet.create({
   container: {
