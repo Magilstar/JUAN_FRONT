@@ -16,6 +16,9 @@ import { MENU_OPTIONS } from "../constans";
 import { LoadContext } from "../contexts/LoadContext";
 import { AuthContext } from "../contexts/AuthContext";
 import AddGroup from "./AddGroup";
+import GroupOne from "./GroupOne";
+import Register from "./Register";
+import Profile from "./Profile";
 
 const Content = () => {
   useBackHandler();
@@ -37,6 +40,8 @@ const Content = () => {
             <Route path="groups" element={<Groups />} />
             <Route path="contactOne/:id" element={<ContactOne />} />
             <Route path="addGroup" element={<AddGroup />} />
+            <Route path="groupOne/:id" element={<GroupOne />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="*" element={<Navigate to="/contacts" />} />
           </Routes>
         </NavigationBar>
@@ -44,6 +49,7 @@ const Content = () => {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       )}

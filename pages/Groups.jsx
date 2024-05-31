@@ -38,7 +38,6 @@ const Groups = () => {
         const URL = `${CONSTANTS.API_URL_GROUPS}/get/user`;
         setIsLoading(true);
         const data = await FetchManager({ url: URL, token });
-        console.log(data);
         setGroups(data);
       } catch (error) {
         Alert.alert(JSON.stringify(error));

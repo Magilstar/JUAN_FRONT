@@ -6,7 +6,7 @@ const GroupComponent = ({ group }) => {
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-    const URL_TO_NAVIGATE = `/groupOne/${group._id}`; 
+    const URL_TO_NAVIGATE = `/groupOne/${group.id}`; 
     navigate(URL_TO_NAVIGATE);
   };
 

@@ -51,6 +51,9 @@ const AddGroup = () => {
   const onSubmit = async (values) => {
     try {
 
+      console.log(value)
+
+
       const newValues = {
         ...values,
         contacts: value,
@@ -62,6 +65,8 @@ const AddGroup = () => {
         token: session.token,
         body: newValues,
       });
+
+      console.log(`LA RESPUESTA ES: ${response}`)
 
       Alert.alert(JSON.stringify(response));
 

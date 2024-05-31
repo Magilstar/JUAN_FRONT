@@ -8,7 +8,7 @@ export const CONSTANTS = {
   API_URL_GROUPS: `${API_URL_BASE}/groups`,
 };
 
-export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
+export const MENU_OPTIONS = ({ navigateFunct, signOut }) => [
   {
     label: "Contacts",
     path: "/contacts",
@@ -18,6 +18,11 @@ export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
     label: "Groups",
     path: "/groups",
     action: () => navigateFunct("/groups"),
+  },
+  {
+    label: "Profile",
+    path: "/profile",
+    action: () => navigateFunct("/profile"),
   },
   {
     label: "Logout",
@@ -35,5 +40,13 @@ export const MENU_OPTIONS = ({navigateFunct, signOut}) => [
   {
     label: "Add Group",
     path: "/addGroup",
+  },
+  {
+    label: "Edit Group",
+    path: "/groupOne/:id",
+  },
+  {
+    label: "Register",
+    path: "/register",
   },
 ];

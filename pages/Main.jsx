@@ -16,7 +16,7 @@ const Main = () => {
           Ingresar
         </StyleButton>
 
-        <StyleButton >Registrarse</StyleButton>
+        <StyleButton to={"register"}>Registrarse</StyleButton>
       </View>
     </View>
   );

@@ -50,7 +50,6 @@ function ContactOne() {
 
   const onSubmit = async (values) => {
     try {
-      console.log(values)
       setIsLoading(true)
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_CONTACTS}/update`,

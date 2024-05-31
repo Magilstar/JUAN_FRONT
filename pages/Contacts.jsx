@@ -38,8 +38,6 @@ const Contacts = () => {
         const URL = `${CONSTANTS.API_URL_CONTACTS}/get/allUser`;
         setIsLoading(true);
         const data = await FetchManager({ url: URL, token });
-        // console.log(data)
-        //Aqui
         setContacts(data);
       } catch (error) {
         Alert.alert(JSON.stringify(error));
