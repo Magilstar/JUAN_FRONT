@@ -27,8 +27,6 @@ const Login = () => {
         body: values,
       });
 
-      console.log(response);
-
       if (response.token) {
         await AsyncStorage.setItem("token", response.token);
         setSession({ isSession: true, token: response.token });
