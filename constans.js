@@ -1,4 +1,5 @@
-const API_URL_BASE = `http://192.168.3.106:8010`;
+// const API_URL_BASE = `http://192.168.3.106:8010`;
+const API_URL_BASE = `https://juanbackend-production.up.railway.app`
 
 export const CONSTANTS = {
   API_URL_AUTH: `${API_URL_BASE}/auth`,
