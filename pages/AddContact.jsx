@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Button, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, Button, StyleSheet, ScrollView } from "react-native";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -9,11 +9,15 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-native";
 import addContactSchema from "../validations/addContact";
 import StyleButton from "../components/StyleButton";
+import { ContactsContext } from "../contexts/ContactsContext";
+import { useModal } from "../hooks/useModal";
 
 const AddContact = () => {
   const { session } = useContext(AuthContext);
+  const { addContact } = useContext(ContactsContext); 
   const [phones, setPhones] = useState([""]);
   const navigate = useNavigate();
+  const {showModal} = useModal()
 
   const onSubmit = async (values) => {
     try {
@@ -25,11 +29,17 @@ const AddContact = () => {
         body: values,
       });
 
-      Alert.alert(JSON.stringify(response));
+      console.log(response)
+      showModal(`Contacto creado correctamente ${response.name}`);
+      // Alert.alert(JSON.stringify(response));
+
+      // Añade el nuevo contacto a la lista de contactos
+      addContact(response);
 
       navigate("/contacts");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("Error al crear el contacto", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
     }
   };
@@ -70,6 +80,7 @@ const AddContact = () => {
                     style={styles.input}
                     placeholder="+584262134235"
                     placeholderTextColor="#aaa"
+                    keyboardType="phone-pad"
                   />
                 </View>
                 <View style={{ marginLeft: 10 }}>
@@ -100,6 +111,7 @@ const AddContact = () => {
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

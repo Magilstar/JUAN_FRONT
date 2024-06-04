@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,10 @@ import {
 } from "react-native";
 import { Link, useLocation } from "react-router-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { SidebarContext } from "../contexts/SidebarContext";
 
 const NavigationBar = ({ menuOptions, children }) => {
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const { isSidebarVisible, setSidebarVisible } = useContext(SidebarContext);
   const location = useLocation();
   const currentOption = menuOptions.find((option) => {
     const containsParam = option.path.includes(":");
@@ -30,6 +31,10 @@ const NavigationBar = ({ menuOptions, children }) => {
 
   const sidebarWidth = new Animated.Value(0);
   const sidebarPosition = new Animated.Value(-200);
+
+  useEffect(() => {
+    setSidebarVisible(false);
+  }, [location]);
 
   useEffect(() => {
     Animated.parallel([

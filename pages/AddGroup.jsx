@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Button, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, StyleSheet,  } from "react-native";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-native";
 import addGroupSchema from "../validations/addGroup.js";
 import StyleButton from "../components/StyleButton";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useModal } from "../hooks/useModal";
 
 const AddGroup = () => {
   const { session } = useContext(AuthContext);
@@ -19,6 +20,8 @@ const AddGroup = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState([]);
   const [items, setItems] = useState([]);
+
+  const { showModal } = useModal();
 
   useEffect(() => {
     setItems(
@@ -68,11 +71,13 @@ const AddGroup = () => {
 
       console.log(`LA RESPUESTA ES: ${response}`)
 
-      Alert.alert(JSON.stringify(response));
+      showModal(`Group created successfully ${response.name}`);
+      // Alert.alert(JSON.stringify(response));
 
       navigate("/groups");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("Error creating the group", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
     }
   };

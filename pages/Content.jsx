@@ -19,12 +19,15 @@ import AddGroup from "./AddGroup";
 import GroupOne from "./GroupOne";
 import Register from "./Register";
 import Profile from "./Profile";
+import CustomModal from "../components/CustomModal";
+import { useModal } from "../hooks/useModal";
 
 const Content = () => {
   useBackHandler();
   const { isLoading } = useContext(LoadContext);
   const { session, signOut } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { modal } = useModal();
 
   const menuOptions = MENU_OPTIONS({ navigateFunct: navigate, signOut });
 
@@ -32,6 +35,11 @@ const Content = () => {
     <View style={styles.container}>
       <StatusBar style="dark" backgroundColor="#000" />
       {isLoading && <Loader style={styles.loader} />}
+      <CustomModal
+        isVisible={modal.isVisible}
+        message={modal.message}
+        type={modal.type}
+      />
       {session.isSession && session.token !== null ? (
         <NavigationBar menuOptions={menuOptions}>
           <Routes>

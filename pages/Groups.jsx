@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import GroupComponent from "../components/GroupComponent";
 import FetchManager from "../FetchManager";
 import { CONSTANTS } from "../constans";
@@ -7,12 +7,14 @@ import { AuthContext } from "../contexts/AuthContext";
 import { FAB } from "react-native-paper";
 import { useNavigate } from "react-router-native";
 import { LoadContext } from "../contexts/LoadContext";
+import { useModal } from "../hooks/useModal";
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);
   const { session } = useContext(AuthContext);
   const { setIsLoading } = useContext(LoadContext);
   const navigate = useNavigate();
+  const {showModal} = useModal();
 
   let sortedGroups = [];
   let groupedGroups = {};
@@ -40,7 +42,8 @@ const Groups = () => {
         const data = await FetchManager({ url: URL, token });
         setGroups(data);
       } catch (error) {
-        Alert.alert(JSON.stringify(error));
+        showModal("An error occurred", "error")
+        // Alert.alert(JSON.stringify(error));
         console.log(error);
       } finally {
         setIsLoading(false);

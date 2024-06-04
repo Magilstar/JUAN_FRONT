@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, Alert, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
 import FetchManager from "../FetchManager";
@@ -11,6 +11,7 @@ import StyleButton from "../components/StyleButton";
 import { LoadContext } from "../contexts/LoadContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import { intersection } from "lodash";
+import { useModal } from "../hooks/useModal";
 
 function GroupOne() {
   const { id } = useParams();
@@ -22,6 +23,7 @@ function GroupOne() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState([]);
   const [items, setItems] = useState([]);
+  const { showModal } = useModal();
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -75,12 +77,11 @@ function GroupOne() {
   }, [contacts]);
 
   const onSubmit = async (values) => {
-
     const newValues = {
-      ...values, 
+      ...values,
       contacts: value,
-      groupId: id
-    }
+      groupId: id,
+    };
 
     try {
       setIsLoading(true);
@@ -91,11 +92,13 @@ function GroupOne() {
         body: newValues,
       });
 
-      Alert.alert(JSON.stringify(response));
+      showModal(`Group updated ${response.name}`);
+      // Alert.alert(JSON.stringify(response));
 
       navigate("/groups");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("Error updating the group", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -110,11 +113,13 @@ function GroupOne() {
         token: session.token,
       });
 
-      Alert.alert(JSON.stringify(response));
+      showModal(`Group deleted ${response.name}`);
+      // Alert.alert(JSON.stringify(response));
 
       navigate("/groups");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("Error deleting the group", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
     }
   };
@@ -125,10 +130,7 @@ function GroupOne() {
 
   return (
     <View style={styles.container}>
-      <Formik
-        initialValues={group}
-        onSubmit={onSubmit}
-      >
+      <Formik initialValues={group} onSubmit={onSubmit}>
         {({ handleSubmit, setFieldValue }) => (
           <View>
             <View style={{ flexDirection: "column" }}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Button, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, Button, StyleSheet, ScrollView } from "react-native";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
 import FetchManager from "../FetchManager";
@@ -9,11 +9,13 @@ import { useNavigate } from "react-router-native";
 // import updateProfileSchema from "../validations/updateProfile";
 import { LoadContext } from "../contexts/LoadContext";
 import StyleButton from "../components/StyleButton";
+import { useModal } from "../hooks/useModal";
 
 function Profile() {
   const { session, signOut } = useContext(AuthContext);
   const { setIsLoading } = useContext(LoadContext);
   const navigate = useNavigate();
+  const { showModal } = useModal();
 
   const [user, setUser] = useState(null);
 
@@ -45,11 +47,13 @@ function Profile() {
         token: session.token,
       });
 
-      Alert.alert(JSON.stringify(response));
+      showModal("Account deleted", "success");
+      // Alert.alert(JSON.stringify(response));
       signOut();
       navigate("/login");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("An error occurred", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -66,11 +70,13 @@ function Profile() {
         body: values,
       });
 
-      Alert.alert(JSON.stringify(response));
+      showModal("Profile updated", "success");
+      // Alert.alert(JSON.stringify(response));
 
       navigate("/profile");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("An error occurred", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
     } finally {
       setIsLoading(false);

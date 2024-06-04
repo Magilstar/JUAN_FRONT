@@ -1,4 +1,4 @@
-import { View, Alert, Button } from "react-native";
+import { View } from "react-native";
 import Logo from "../components/Logo";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
@@ -11,12 +11,14 @@ import { LoadContext } from "../contexts/LoadContext";
 import { CONSTANTS } from "../constans";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../contexts/AuthContext";
+import { useModal } from "../hooks/useModal";
 
 const Login = () => {
   const initial = { email: "", password: "" };
   const navigate = useNavigate();
   const { isLoading, setIsLoading } = useContext(LoadContext);
   const { setSession } = useContext(AuthContext);
+  const { showModal } = useModal();
 
   const onSubmitLogin = async (values) => {
     try {
@@ -30,12 +32,15 @@ const Login = () => {
       if (response.token) {
         await AsyncStorage.setItem("token", response.token);
         setSession({ isSession: true, token: response.token });
+        showModal("Login Success", "success");
         navigate("/contacts");
       } else {
-        Alert.alert(`Login Failed. ${response.message}`);
+        showModal(`Login Failed.`, "error");
+        // Alert.alert(`Login Failed. ${response.message}`);
       }
     } catch (error) {
       setSession({ isSession: false, token: null });
+      showModal("Login Failed", "error");
       Alert.alert(JSON.stringify(error));
     } finally {
       setIsLoading(false);

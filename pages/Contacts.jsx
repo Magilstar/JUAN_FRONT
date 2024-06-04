@@ -1,17 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
+import React, { useContext } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import ContactComponent from "../components/ContactComponent";
-import FetchManager from "../FetchManager";
-import { CONSTANTS } from "../constans";
-import { AuthContext } from "../contexts/AuthContext";
 import { FAB } from "react-native-paper";
 import { useNavigate } from "react-router-native";
-import { LoadContext } from "../contexts/LoadContext";
+import { ContactsContext } from "../contexts/ContactsContext";
 
 const Contacts = () => {
-  const [contacts, setContacts] = useState([]);
-  const { session } = useContext(AuthContext);
-  const { setIsLoading } = useContext(LoadContext);
+  const { contacts } = useContext(ContactsContext);
   const navigate = useNavigate();
 
   let sortedContacts = [];
@@ -20,7 +15,6 @@ const Contacts = () => {
   if (contacts && contacts.length > 0) {
     sortedContacts = contacts.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Agrupar los contactos por la primera letra del nombre
     groupedContacts = sortedContacts.reduce((groups, contact) => {
       const firstLetter = contact.name[0].toUpperCase();
       if (!groups[firstLetter]) {
@@ -31,45 +25,32 @@ const Contacts = () => {
     }, {});
   }
 
-  useEffect(() => {
-    const handleFetchInit = async () => {
-      try {
-        const { token } = session;
-        const URL = `${CONSTANTS.API_URL_CONTACTS}/get/allUser`;
-        setIsLoading(true);
-        const data = await FetchManager({ url: URL, token });
-        setContacts(data);
-      } catch (error) {
-        Alert.alert(JSON.stringify(error));
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    handleFetchInit();
-  }, []);
-
   const handleAddContact = () => navigate("/addContact");
 
   return (
     <View style={styles.container}>
       <ScrollView>
-        {Object.entries(groupedContacts).map(([letter, contacts], index) => (
-          <View key={index}>
-            <Text style={styles.letter}>{letter}</Text>
-            <View style={styles.group}>
-              {contacts.map((contact, index) => (
-                <View key={contact.id}>
-                  <ContactComponent contact={contact} />
-                  {index < contacts.length - 1 && (
-                    <View style={styles.separator} />
-                  )}
-                </View>
-              ))}
+        {Object.keys(groupedContacts).length === 0 ? (
+          <Text style={styles.message}>
+            No contacts, press the button to start saving numbers!
+          </Text>
+        ) : (
+          Object.entries(groupedContacts).map(([letter, contacts], index) => (
+            <View key={index}>
+              <Text style={styles.letter}>{letter}</Text>
+              <View style={styles.group}>
+                {contacts.map((contact, index) => (
+                  <View key={contact.id}>
+                    <ContactComponent contact={contact} />
+                    {index < contacts.length - 1 && (
+                      <View style={styles.separator} />
+                    )}
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
-        ))}
+          ))
+        )}
       </ScrollView>
       <FAB style={styles.fab} small icon="plus" onPress={handleAddContact} />
     </View>
@@ -79,6 +60,15 @@ const Contacts = () => {
 export default Contacts;
 
 const styles = StyleSheet.create({
+  message: {
+    fontSize: 20, // Aumenta el tamaño de la fuente
+    color: "#fff",
+    textAlign: "center",
+    margin: 20, // Añade margen alrededor para darle más espacio
+    padding: 10, // Añade padding para darle más espacio interno
+    borderRadius: 10, // Añade bordes redondeados
+    backgroundColor: '#171718', // Añade un fondo oscuro
+  },
   container: {
     flex: 1,
     padding: 10,

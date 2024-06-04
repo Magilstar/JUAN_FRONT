@@ -14,6 +14,7 @@ const FormikInput = ({
   name,
   placeholder,
   type = "text",
+  keyboardType = "default",
   style = {},
   ...props
 }) => {
@@ -46,6 +47,7 @@ const FormikInput = ({
           onChangeText={(value) => helpers.setValue(value)}
           secureTextEntry={secureTextEntry}
           style={inputStyle}
+          keyboardType={keyboardType} // Modifica esta línea
           {...props}
         />
         {type === "password" && (
@@ -55,7 +57,7 @@ const FormikInput = ({
               position: "absolute",
               right: 10,
               top: "50%",
-              transform: [{ translateY: -10 }], // Adjust this value as needed
+              transform: [{ translateY: -10 }],
             }}
           >
             <Icon

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Button, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, Button, StyleSheet, ScrollView } from "react-native";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -10,14 +10,19 @@ import { useNavigate, useParams } from "react-router-native";
 import addContactSchema from "../validations/addContact";
 import StyleButton from "./StyleButton";
 import { LoadContext } from "../contexts/LoadContext";
+import { ContactsContext } from "../contexts/ContactsContext";
+import { useModal } from "../hooks/useModal";
 
 function ContactOne() {
   const { id } = useParams();
   const [contact, setContact] = useState(null);
   const [groups, setGroups] = useState(null);
   const { session } = useContext(AuthContext);
-  const {setIsLoading} = useContext(LoadContext)
+  const { setIsLoading } = useContext(LoadContext);
   const navigate = useNavigate();
+  const { modal, toggleModal, showModal } = useModal();
+
+  const { updateContact, deleteContact } = useContext(ContactsContext);
 
   useEffect(() => {
     const fetchContactData = async () => {
@@ -50,7 +55,7 @@ function ContactOne() {
 
   const onSubmit = async (values) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_CONTACTS}/update`,
         method: "PUT",
@@ -58,18 +63,20 @@ function ContactOne() {
         body: values,
       });
 
-      Alert.alert(JSON.stringify(response));
+      showModal(`Se ha creado el nuevo contacto ${response.name}`);
+      updateContact(response.contact);
 
       navigate("/contacts");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("Ha ocurrido un error", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
-    }finally{
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const deleteContact = async () => {
+  const deleteContactHandler = async () => {
     try {
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_CONTACTS}/delete/${id}`,
@@ -77,11 +84,12 @@ function ContactOne() {
         token: session.token,
       });
 
-      Alert.alert(JSON.stringify(response));
+      showModal(`Se ha eliminado el contacto ${response.name}`);
+      deleteContact(id);
 
       navigate("/contacts");
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("Ha ocurrido un error", "error");
       console.log(error);
     }
   };
@@ -94,11 +102,13 @@ function ContactOne() {
         token: session.token,
       });
 
-      Alert.alert(JSON.stringify(response));
+      showModal(`Se ha eliminado el grupo ${response.name}`);
+      // Alert.alert(JSON.stringify(response));
 
       setGroups(groups.filter((group) => group.id !== groupId));
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      showModal("Ha ocurrido un error", "error");
+      // Alert.alert(JSON.stringify(error));
       console.log(error);
     }
   };
@@ -113,15 +123,9 @@ function ContactOne() {
       phone: contact.phone.filter((_, i) => i !== index),
     });
   };
-  emoveNumberField = (index) => {
-    setContact({
-      ...contact,
-      phone: contact.phone.filter((_, i) => i !== index),
-    });
-  };
 
   if (!contact || !groups) {
-    return null; // O puedes mostrar un componente de carga aquí
+    return null;
   }
 
   return (
@@ -149,6 +153,7 @@ function ContactOne() {
                         <FormikInput
                           name={`phone[${index}]`}
                           style={styles.input}
+                          keyboardType="phone-pad"
                         />
                       </View>
                       <View style={{}}>
@@ -191,10 +196,10 @@ function ContactOne() {
                 </View>
               ))}
             <View style={styles.buttonContainer}>
-
               <StyleButton onPress={handleSubmit}>Update</StyleButton>
-              <StyleButton onPress={deleteContact} color="red">Delete</StyleButton>
-
+              <StyleButton onPress={deleteContactHandler} color="red">
+                Delete
+              </StyleButton>
             </View>
           </View>
         )}
