@@ -5,21 +5,23 @@ import { LoadProvider } from "./contexts/LoadContext";
 import { ContactsProvider } from "./contexts/ContactsContext";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { ModalProvider } from "./contexts/ModalContext";
+import { GroupsProvider } from "./contexts/GroupsContext";
 
 const App = () => {
   return (
     <AuthProvider>
       <LoadProvider>
-        <ContactsProvider>
-          <SidebarProvider>
-            <NativeRouter>
-              <ModalProvider>
-
-              <Content />
-              </ModalProvider>
-            </NativeRouter>
-          </SidebarProvider>
-        </ContactsProvider>
+        <SidebarProvider>
+          <NativeRouter>
+            <ModalProvider>
+              <GroupsProvider>
+                <ContactsProvider>
+                  <Content />
+                </ContactsProvider>
+              </GroupsProvider>
+            </ModalProvider>
+          </NativeRouter>
+        </SidebarProvider>
       </LoadProvider>
     </AuthProvider>
   );

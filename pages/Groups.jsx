@@ -1,20 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import GroupComponent from "../components/GroupComponent";
-import FetchManager from "../FetchManager";
-import { CONSTANTS } from "../constans";
-import { AuthContext } from "../contexts/AuthContext";
 import { FAB } from "react-native-paper";
 import { useNavigate } from "react-router-native";
-import { LoadContext } from "../contexts/LoadContext";
-import { useModal } from "../hooks/useModal";
+import { GroupsContext } from "../contexts/GroupsContext";
 
 const Groups = () => {
-  const [groups, setGroups] = useState([]);
-  const { session } = useContext(AuthContext);
-  const { setIsLoading } = useContext(LoadContext);
+  const { groups } = useContext(GroupsContext);
   const navigate = useNavigate();
-  const {showModal} = useModal();
 
   let sortedGroups = [];
   let groupedGroups = {};
@@ -22,7 +15,6 @@ const Groups = () => {
   if (groups && groups.length > 0) {
     sortedGroups = groups.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Group the groups by the first letter of the name
     groupedGroups = sortedGroups.reduce((groups, group) => {
       const firstLetter = group.name[0].toUpperCase();
       if (!groups[firstLetter]) {
@@ -32,26 +24,6 @@ const Groups = () => {
       return groups;
     }, {});
   }
-
-  useEffect(() => {
-    const handleFetchInit = async () => {
-      try {
-        const { token } = session;
-        const URL = `${CONSTANTS.API_URL_GROUPS}/get/user`;
-        setIsLoading(true);
-        const data = await FetchManager({ url: URL, token });
-        setGroups(data);
-      } catch (error) {
-        showModal("An error occurred", "error")
-        // Alert.alert(JSON.stringify(error));
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    handleFetchInit();
-  }, []);
 
   const handleAddGroup = () => navigate("/addGroup");
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet,  } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -11,6 +11,7 @@ import addGroupSchema from "../validations/addGroup.js";
 import StyleButton from "../components/StyleButton";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useModal } from "../hooks/useModal";
+import { GroupsContext } from "../contexts/GroupsContext";
 
 const AddGroup = () => {
   const { session } = useContext(AuthContext);
@@ -22,6 +23,7 @@ const AddGroup = () => {
   const [items, setItems] = useState([]);
 
   const { showModal } = useModal();
+  const { addGroup } = useContext(GroupsContext);
 
   useEffect(() => {
     setItems(
@@ -53,14 +55,10 @@ const AddGroup = () => {
 
   const onSubmit = async (values) => {
     try {
-
-      console.log(value)
-
-
       const newValues = {
         ...values,
         contacts: value,
-      }
+      };
 
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_GROUPS}/create`,
@@ -69,15 +67,12 @@ const AddGroup = () => {
         body: newValues,
       });
 
-      console.log(`LA RESPUESTA ES: ${response}`)
+      addGroup(response);
 
       showModal(`Group created successfully ${response.name}`);
-      // Alert.alert(JSON.stringify(response));
-
       navigate("/groups");
     } catch (error) {
       showModal("Error creating the group", "error");
-      // Alert.alert(JSON.stringify(error));
       console.log(error);
     }
   };

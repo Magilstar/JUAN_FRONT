@@ -3,6 +3,7 @@ import { CONSTANTS } from "../constans";
 import FetchManager from "../FetchManager";
 import { AuthContext } from "./AuthContext";
 import { LoadContext } from "./LoadContext";
+import { GroupsContext } from "./GroupsContext";
 
 export const ContactsContext = createContext();
 
@@ -10,12 +11,15 @@ export const ContactsProvider = ({ children }) => {
   const [contacts, setContacts] = useState([]);
   const { session } = useContext(AuthContext);
   const { setIsLoading } = useContext(LoadContext);
+  const { groups } = useContext(GroupsContext);
 
   useEffect(() => {
+    if (!groups || groups.length === 0) return;
+
     if (session.token) {
       fetchContacts();
     }
-  }, [session.token]);
+  }, [session.token, groups]);
 
   const fetchContacts = async () => {
     try {

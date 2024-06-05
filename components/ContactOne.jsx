@@ -141,6 +141,10 @@ function ContactOne() {
               <FormikInput name="name" style={styles.input} />
             </View>
 
+            <View style={styles.row}>
+              <FormikInput name="email" style={styles.input} />
+            </View>
+
             <View style={{ flexDirection: "row", flex: 1 }}>
               <View style={{ flex: 1 }}>
                 {contact.phone &&

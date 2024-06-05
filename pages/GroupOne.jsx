@@ -12,6 +12,7 @@ import { LoadContext } from "../contexts/LoadContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import { intersection } from "lodash";
 import { useModal } from "../hooks/useModal";
+import { GroupsContext } from "../contexts/GroupsContext";
 
 function GroupOne() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ function GroupOne() {
   const [value, setValue] = useState([]);
   const [items, setItems] = useState([]);
   const { showModal } = useModal();
+  const { updateGroup, deleteGroup } = useContext(GroupsContext);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -92,20 +94,19 @@ function GroupOne() {
         body: newValues,
       });
 
-      showModal(`Group updated ${response.name}`);
-      // Alert.alert(JSON.stringify(response));
+      updateGroup(response); // Update the group in the context
 
+      showModal(`Group updated ${response.name}`);
       navigate("/groups");
     } catch (error) {
       showModal("Error updating the group", "error");
-      // Alert.alert(JSON.stringify(error));
       console.log(error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const deleteGroup = async () => {
+  const deleteGroupHandler = async () => {
     try {
       const response = await FetchManager({
         url: `${CONSTANTS.API_URL_GROUPS}/delete/${id}`,
@@ -113,13 +114,12 @@ function GroupOne() {
         token: session.token,
       });
 
-      showModal(`Group deleted ${response.name}`);
-      // Alert.alert(JSON.stringify(response));
+      deleteGroup(id);
 
+      showModal(`Group deleted ${response.name}`);
       navigate("/groups");
     } catch (error) {
       showModal("Error deleting the group", "error");
-      // Alert.alert(JSON.stringify(error));
       console.log(error);
     }
   };
@@ -162,7 +162,7 @@ function GroupOne() {
               </StyleButton>
 
               <StyleButton
-                onPress={deleteGroup}
+                onPress={deleteGroupHandler}
                 color="red"
                 style={styles.button}
               >

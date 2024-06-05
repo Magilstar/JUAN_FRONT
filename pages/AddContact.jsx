@@ -14,10 +14,10 @@ import { useModal } from "../hooks/useModal";
 
 const AddContact = () => {
   const { session } = useContext(AuthContext);
-  const { addContact } = useContext(ContactsContext); 
+  const { addContact } = useContext(ContactsContext);
   const [phones, setPhones] = useState([""]);
   const navigate = useNavigate();
-  const {showModal} = useModal()
+  const { showModal } = useModal();
 
   const onSubmit = async (values) => {
     try {
@@ -29,7 +29,7 @@ const AddContact = () => {
         body: values,
       });
 
-      console.log(response)
+      console.log(response);
       showModal(`Contacto creado correctamente ${response.name}`);
       // Alert.alert(JSON.stringify(response));
 
@@ -69,6 +69,16 @@ const AddContact = () => {
                 placeholderTextColor="#aaa"
               />
             </View>
+
+            <View>
+              <FormikInput
+                name="email"
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#aaa"
+              />
+            </View>
+
             {phones.map((_number, index) => (
               <View
                 key={index}
@@ -111,7 +121,6 @@ const AddContact = () => {
     </ScrollView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
