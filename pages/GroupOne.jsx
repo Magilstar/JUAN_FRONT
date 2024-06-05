@@ -13,6 +13,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { intersection } from "lodash";
 import { useModal } from "../hooks/useModal";
 import { GroupsContext } from "../contexts/GroupsContext";
+import Icon from "react-native-vector-icons/Ionicons";
 
 function GroupOne() {
   const { id } = useParams();
@@ -130,6 +131,9 @@ function GroupOne() {
 
   return (
     <View style={styles.container}>
+      
+      <Icon name="people-outline" size={110} style={{marginHorizontal: "auto", marginBottom: 20, color:"#fff"}} />
+      
       <Formik initialValues={group} onSubmit={onSubmit}>
         {({ handleSubmit, setFieldValue }) => (
           <View>
@@ -141,6 +145,7 @@ function GroupOne() {
             </View>
 
             <DropDownPicker
+              theme="DARK"
               open={open}
               value={value}
               items={items}
@@ -154,6 +159,7 @@ function GroupOne() {
               onChangeItem={(item) => setFieldValue("contacts", item.value)}
               searchablePlaceholder="Search for an item"
               searchableError={() => <Text>Not Found</Text>}
+              style={{width: "95%", marginHorizontal: "auto"}}
             />
 
             <View style={styles.buttonContainer}>
@@ -179,7 +185,7 @@ function GroupOne() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: "start",
     padding: 20,
     backgroundColor: "#000",
   },

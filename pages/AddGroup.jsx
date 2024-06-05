@@ -79,6 +79,7 @@ const AddGroup = () => {
 
   return (
     <View style={styles.container}>
+      <Icon name="people-outline" size={110} style={{marginHorizontal: "auto", marginBottom: 20, color:"#fff"}} />
       <Formik
         initialValues={{ groupName: "", contacts: [] }}
         onSubmit={onSubmit}
@@ -106,6 +107,9 @@ const AddGroup = () => {
               onChangeItem={(item) => setFieldValue("contacts", item)}
               searchablePlaceholder="Search for an item"
               searchableError={() => <Text>Not Found</Text>}
+              theme="DARK"
+              style={{width: "95%", marginHorizontal: "auto"}}
+              
             />
             <View style={styles.buttonContainer}>
               <StyleButton onPress={handleSubmit}>Create</StyleButton>
@@ -120,7 +124,6 @@ const AddGroup = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: "center",
     padding: 20,
     backgroundColor: "#000",
   },

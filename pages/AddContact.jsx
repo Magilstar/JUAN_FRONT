@@ -1,5 +1,11 @@
 import React, { useContext, useState } from "react";
-import { View, Button, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Formik } from "formik";
 import FormikInput from "../components/FormikInput";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -53,79 +59,84 @@ const AddContact = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Formik
-        initialValues={{ name: "", phone: phones }}
-        onSubmit={onSubmit}
-        validationSchema={addContactSchema}
-      >
-        {({ handleSubmit }) => (
-          <View>
-            <View>
-              <FormikInput
-                name="name"
-                style={styles.input}
-                placeholder="Name"
-                placeholderTextColor="#aaa"
-              />
-            </View>
-
-            <View>
-              <FormikInput
-                name="email"
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="#aaa"
-              />
-            </View>
-
-            {phones.map((_number, index) => (
-              <View
-                key={index}
-                style={{ flexDirection: "row", alignItems: "center" }}
-              >
-                <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps='handled'>
+        <View>
+          <Icon
+            name="person-add-outline"
+            size={110}
+            color="#fff"
+            style={{ marginHorizontal: "auto", marginBottom: 20 }}
+          />
+          <Formik
+            initialValues={{ name: "", phone: phones }}
+            onSubmit={onSubmit}
+            validationSchema={addContactSchema}
+          >
+            {({ handleSubmit }) => (
+              <View>
+                <View>
                   <FormikInput
-                    name={`phone[${index}]`}
+                    name="name"
                     style={styles.input}
-                    placeholder="+584262134235"
+                    placeholder="Name"
                     placeholderTextColor="#aaa"
-                    keyboardType="phone-pad"
                   />
                 </View>
-                <View style={{ marginLeft: 10 }}>
-                  {index !== 0 ? (
-                    <Icon
-                      name="remove-circle-outline"
-                      size={24}
-                      style={styles.icon}
-                      onPress={() => removeNumberField(index)}
-                    />
-                  ) : (
-                    <Icon
-                      name="add-circle-outline"
-                      size={24}
-                      style={styles.icon}
-                      onPress={addNumberField}
-                    />
-                  )}
+                <View>
+                  <FormikInput
+                    name="email"
+                    style={styles.input}
+                    placeholder="Email"
+                    placeholderTextColor="#aaa"
+                  />
+                </View>
+                {phones.map((_number, index) => (
+                  <View
+                    key={index}
+                    style={{ flexDirection: "row", alignItems: "center" }}
+                  >
+                    <View style={{ flex: 1 }}>
+                      <FormikInput
+                        name={`phone[${index}]`}
+                        style={styles.input}
+                        placeholder="+584262134235"
+                        placeholderTextColor="#aaa"
+                        keyboardType="phone-pad"
+                      />
+                    </View>
+                    <View style={{ marginLeft: 10 }}>
+                      {index !== 0 ? (
+                        <Icon
+                          name="remove-circle-outline"
+                          size={24}
+                          style={styles.icon}
+                          onPress={() => removeNumberField(index)}
+                        />
+                      ) : (
+                        <Icon
+                          name="add-circle-outline"
+                          size={24}
+                          style={styles.icon}
+                          onPress={addNumberField}
+                        />
+                      )}
+                    </View>
+                  </View>
+                ))}
+                <View style={styles.buttonContainer}>
+                  <StyleButton onPress={handleSubmit}>Create</StyleButton>
                 </View>
               </View>
-            ))}
-            <View style={styles.buttonContainer}>
-              <StyleButton onPress={handleSubmit}>Create</StyleButton>
-            </View>
-          </View>
-        )}
-      </Formik>
-    </ScrollView>
+            )}
+          </Formik>
+        </View>
+      </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: "center",
     padding: 20,
     backgroundColor: "#000",
   },

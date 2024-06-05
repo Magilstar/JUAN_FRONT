@@ -25,6 +25,7 @@ function ContactOne() {
   const { updateContact, deleteContact } = useContext(ContactsContext);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchContactData = async () => {
       try {
         const URL = `${CONSTANTS.API_URL_CONTACTS}/getContact/${id}`;
@@ -51,6 +52,7 @@ function ContactOne() {
 
     fetchContactData();
     fetchGroupData();
+    setIsLoading(false);
   }, []);
 
   const onSubmit = async (values) => {
@@ -130,6 +132,7 @@ function ContactOne() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Icon name="person-add-outline" size={110} color="#fff" style={{ marginHorizontal: "auto", marginBottom: 20 }} />
       <Formik
         initialValues={contact}
         onSubmit={onSubmit}
@@ -215,7 +218,6 @@ function ContactOne() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: "center",
     padding: 20,
     backgroundColor: "#000",
   },
@@ -223,7 +225,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 10,
   },
   input: {
     height: 50,
